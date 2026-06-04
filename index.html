@@ -110,6 +110,12 @@
   .cat-btn.selected { border-color: var(--orange); background: var(--orange-dim); }
   .cat-btn.selected span { color: var(--orange); }
   .add-btn { background: var(--orange); border: none; border-radius: 16px; padding: 16px; color: #fff; font-size: 16px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; width: 100%; margin-top: auto; box-shadow: 0 8px 24px rgba(255,107,43,0.4); transition: transform 0.1s; }
+
+  /* ── Date toggle ── */
+  .date-toggle { display: flex; background: var(--surface); border-radius: 12px; padding: 4px; gap: 4px; }
+  .date-btn { flex: 1; padding: 8px; border: none; border-radius: 9px; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; background: transparent; color: var(--muted); }
+  .date-btn.active { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .date-picker-input { color-scheme: dark; }
   .add-btn:active { transform: scale(0.97); }
   .add-btn.editing { background: var(--blue); box-shadow: 0 8px 24px rgba(77,159,255,0.35); }
 
@@ -156,14 +162,33 @@
   .fixed-sum-val { font-size: 22px; font-weight: 600; color: var(--red); font-family: 'DM Mono', monospace; }
   .fixed-scroll { flex: 1; overflow-y: auto; padding: 0 20px 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .fixed-scroll::-webkit-scrollbar { display: none; }
-  .fixed-item { background: var(--surface); border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--border); margin-bottom: 8px; }
-  .fixed-item-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .fixed-item { background: var(--surface); border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--border); margin-bottom: 8px; transition: all 0.2s; }
+  .fixed-item.paid { border-color: rgba(48,217,128,0.35); background: rgba(48,217,128,0.06); }
+  .fixed-item-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; transition: filter 0.2s; }
+  .fixed-item.paid .fixed-item-icon { filter: grayscale(0.4); }
   .fixed-item-info { flex: 1; min-width: 0; }
   .fixed-item-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .fixed-item.paid .fixed-item-name { color: var(--muted); }
   .fixed-item-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .fixed-item-status { font-size: 10px; font-weight: 600; margin-top: 3px; display: inline-flex; align-items: center; gap: 3px; }
+  .fixed-item-status.unpaid { color: var(--yellow); }
+  .fixed-item-status.paid-lbl { color: var(--green); }
   .fixed-item-amount { font-size: 14px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--red); white-space: nowrap; }
-  .fixed-item-actions { display: flex; gap: 2px; flex-shrink: 0; }
+  .fixed-item.paid .fixed-item-amount { color: var(--muted); text-decoration: line-through; }
+  .fixed-item-actions { display: flex; gap: 4px; flex-shrink: 0; align-items: center; }
+  .fixed-pay-btn { border: none; border-radius: 10px; padding: 6px 10px; font-size: 11px; font-weight: 700; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.18s; white-space: nowrap; line-height: 1.2; }
+  .fixed-pay-btn.unpaid { background: rgba(255,209,102,0.15); color: var(--yellow); border: 1px solid rgba(255,209,102,0.35); }
+  .fixed-pay-btn.unpaid:active { background: rgba(255,209,102,0.3); transform: scale(0.96); }
+  .fixed-pay-btn.paid { background: rgba(48,217,128,0.12); color: var(--green); border: 1px solid rgba(48,217,128,0.3); }
+  .fixed-pay-btn.paid:active { background: rgba(48,217,128,0.22); transform: scale(0.96); }
   .fixed-empty { font-size: 13px; color: var(--muted); text-align: center; padding: 40px 20px; line-height: 1.6; }
+
+  /* Fixed progress bar */
+  .fixed-progress-wrap { margin: 0 20px 14px; }
+  .fixed-progress-bar-bg { background: var(--surface2); border-radius: 6px; height: 6px; overflow: hidden; margin-top: 8px; }
+  .fixed-progress-bar-fill { height: 6px; border-radius: 6px; background: var(--green); transition: width 0.4s cubic-bezier(.4,0,.2,1); }
+  .fixed-progress-labels { display: flex; justify-content: space-between; margin-top: 5px; }
+  .fixed-progress-lbl { font-size: 11px; color: var(--muted); }
 
   /* ── Settings Screen ── */
   .settings-screen { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
@@ -191,6 +216,17 @@
   .settings-danger { background: rgba(255,77,106,0.08); border: 1px solid rgba(255,77,106,0.25); border-radius: 14px; }
   .settings-danger .settings-item-label { color: var(--red); }
   .settings-danger .settings-item-icon { filter: none; }
+
+  /* ── Collapsible data groups ── */
+  .settings-group-header { cursor: pointer; }
+  .settings-group-header:active { background: var(--surface2); }
+  .settings-group-caret { transition: transform 0.22s cubic-bezier(.4,0,.2,1); display: inline-block; font-size: 14px; }
+  .settings-group-caret.open { transform: rotate(90deg); }
+  .settings-group-body { max-height: 0; overflow: hidden; transition: max-height 0.28s cubic-bezier(.4,0,.2,1); }
+  .settings-group-body.open { max-height: 300px; }
+  .settings-subitem { padding-left: 28px; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); }
+  .settings-subitem:active { background: var(--surface2); }
+  #import-group-header { border-top: 1px solid var(--border); }
 
   /* ── Tab Bar ── */
   .tab-bar {
@@ -370,6 +406,14 @@
           <div class="field-label" id="lbl-category"></div>
           <div class="cat-grid" id="cat-grid"></div>
         </div>
+        <div>
+          <div class="field-label" id="lbl-date-field"></div>
+          <div class="date-toggle">
+            <button class="date-btn active" id="date-btn-today" onclick="setDateMode('today')"></button>
+            <button class="date-btn" id="date-btn-custom" onclick="setDateMode('custom')"></button>
+          </div>
+          <input class="field-input date-picker-input" id="date-custom-input" type="date" style="display:none;margin-top:8px">
+        </div>
         <button class="add-btn" id="add-btn" onclick="submitEntry()"></button>
       </div>
     </div>
@@ -448,6 +492,15 @@
             <div style="font-size:15px;font-weight:600;color:var(--muted)" id="fixed-count-val">0</div>
           </div>
         </div>
+        <div class="fixed-progress-wrap" id="fixed-progress-wrap" style="display:none">
+          <div class="fixed-progress-bar-bg">
+            <div class="fixed-progress-bar-fill" id="fixed-progress-fill" style="width:0%"></div>
+          </div>
+          <div class="fixed-progress-labels">
+            <span class="fixed-progress-lbl" id="fixed-progress-paid-lbl"></span>
+            <span class="fixed-progress-lbl" id="fixed-progress-total-lbl"></span>
+          </div>
+        </div>
         <div class="fixed-scroll" id="fixed-list"></div>
       </div>
     </div>
@@ -463,25 +516,51 @@
           <div class="settings-section">
             <div class="settings-section-label" id="lbl-settings-data"></div>
             <div class="settings-row">
-              <div class="settings-item" onclick="exportCSV()">
-                <span class="settings-item-icon"><span class="icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span></span>
-                <span class="settings-item-label" id="lbl-export-csv"></span>
-                <span class="settings-item-arrow">›</span>
-              </div>
-              <div class="settings-item" onclick="exportProfile()">
+              <!-- EXPORT group -->
+              <div class="settings-item settings-group-header" onclick="toggleDataGroup('export')">
                 <span class="settings-item-icon"><span class="icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span></span>
-                <span class="settings-item-label" id="lbl-export-profile"></span>
-                <span class="settings-item-arrow">›</span>
+                <span class="settings-item-label" id="lbl-export-group"></span>
+                <span class="settings-item-arrow settings-group-caret" id="caret-export">›</span>
               </div>
-              <div class="settings-item" onclick="triggerImport()">
+              <div class="settings-group-body" id="group-export">
+                <div class="settings-item settings-subitem" onclick="exportCSV()">
+                  <span class="settings-item-icon" style="opacity:0.5"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span></span>
+                  <span class="settings-item-label" id="lbl-export-csv"></span>
+                  <span class="settings-item-arrow">›</span>
+                </div>
+                <div class="settings-item settings-subitem" onclick="exportXLSX()">
+                  <span class="settings-item-icon" style="opacity:0.5"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--green)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span></span>
+                  <span class="settings-item-label" id="lbl-export-xlsx"></span>
+                  <span class="settings-item-arrow">›</span>
+                </div>
+                <div class="settings-item settings-subitem" onclick="exportProfile()" style="border-bottom:none">
+                  <span class="settings-item-icon" style="opacity:0.5"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span></span>
+                  <span class="settings-item-label" id="lbl-export-profile"></span>
+                  <span class="settings-item-arrow">›</span>
+                </div>
+              </div>
+              <!-- IMPORT group -->
+              <div class="settings-item settings-group-header" onclick="toggleDataGroup('import')" style="border-bottom:none" id="import-group-header">
                 <span class="settings-item-icon"><span class="icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span></span>
-                <span class="settings-item-label" id="lbl-import-profile"></span>
-                <span class="settings-item-arrow">›</span>
+                <span class="settings-item-label" id="lbl-import-group"></span>
+                <span class="settings-item-arrow settings-group-caret" id="caret-import">›</span>
               </div>
-              <div class="settings-item" onclick="triggerImportCSV()">
-                <span class="settings-item-icon"><span class="icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/><line x1="5" y1="19" x2="5" y2="19" stroke-width="2.5"/><path d="M8 19h2.5"/><path d="M13 17v4"/><path d="M16 17l2 2-2 2"/></svg></span></span>
-                <span class="settings-item-label" id="lbl-import-csv"></span>
-                <span class="settings-item-arrow">›</span>
+              <div class="settings-group-body" id="group-import">
+                <div class="settings-item settings-subitem" onclick="triggerImportCSV()">
+                  <span class="settings-item-icon" style="opacity:0.5"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span></span>
+                  <span class="settings-item-label" id="lbl-import-csv"></span>
+                  <span class="settings-item-arrow">›</span>
+                </div>
+                <div class="settings-item settings-subitem" onclick="triggerImportXLSX()">
+                  <span class="settings-item-icon" style="opacity:0.5"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--green)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span></span>
+                  <span class="settings-item-label" id="lbl-import-xlsx"></span>
+                  <span class="settings-item-arrow">›</span>
+                </div>
+                <div class="settings-item settings-subitem" onclick="triggerImport()" style="border-bottom:none">
+                  <span class="settings-item-icon" style="opacity:0.5"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span></span>
+                  <span class="settings-item-label" id="lbl-import-profile"></span>
+                  <span class="settings-item-arrow">›</span>
+                </div>
               </div>
             </div>
           </div>
@@ -647,6 +726,7 @@
 
 <input type="file" id="import-file-input" accept=".json" style="display:none" onchange="handleImportFile(event)">
 <input type="file" id="import-csv-input" accept=".csv" style="display:none" onchange="handleImportCSV(event)">
+<input type="file" id="import-xlsx-input" accept=".xlsx,.xls" style="display:none" onchange="handleImportXLSX(event)">
 
 <script>
 // ── Icon System ──
@@ -712,6 +792,9 @@ const STRINGS = {
     category: 'Category',
     addEntry: 'Add Entry',
     saveChanges: 'Save Changes',
+    dateLabel: 'Date',
+    dateToday: 'Today',
+    dateCustom: 'Pick date',
     history: 'History',
     searchPlaceholder: 'Search transactions…',
     day: 'Day', week: 'Week', month: 'Month', year: 'Year', all: 'All',
@@ -749,9 +832,16 @@ const STRINGS = {
     settingsAccounts: 'Accounts',
     settingsDanger: 'Danger Zone',
     exportCsv: 'Export CSV',
+    exportXlsx: 'Export Excel (.xlsx)',
     exportProfile: 'Export profile',
     importProfile: 'Import profile',
     importCsv: 'Import CSV',
+    importXlsx: 'Import Excel (.xlsx)',
+    exportGroup: 'Export',
+    importGroup: 'Import',
+    xlsxOk: 'Excel exported ✓',
+    importXlsxOk: 'Excel imported ✓',
+    importXlsxError: 'Could not read Excel file ✕',
     importCsvTitle: 'Import CSV?',
     importCsvDesc: (n) => `Found ${n} valid transaction${n!==1?'s':''} in the CSV. They will be added to your current data.`,
     importCsvOk: 'CSV imported ✓',
@@ -788,6 +878,12 @@ const STRINGS = {
     fixedEmpty: 'No fixed expenses yet.\nTap "Add" to set up recurring monthly costs like rent, subscriptions, or utilities.',
     fixedBannerLabel: 'Fixed this month',
     fixedBadge: 'FIXED',
+    fixedPayBtn: 'Pay',
+    fixedPaidBtn: '✓ Paid',
+    fixedPaidToast: 'Payment registered ✓',
+    fixedUnpaidToast: 'Marked as unpaid',
+    fixedProgressPaid: (n,t) => `${n} of ${t} paid`,
+    fixedProgressAmt: (a,t) => `$${a} / $${t}`,
     chartBars:  'By period',
     chartDonut: 'By category',
     chartLine:  'Over time',
@@ -815,6 +911,9 @@ const STRINGS = {
     category: 'Categoría',
     addEntry: 'Agregar',
     saveChanges: 'Guardar cambios',
+    dateLabel: 'Fecha',
+    dateToday: 'Hoy',
+    dateCustom: 'Elegir fecha',
     history: 'Historial',
     searchPlaceholder: 'Buscar movimientos…',
     day: 'Día', week: 'Sem', month: 'Mes', year: 'Año', all: 'Todo',
@@ -852,9 +951,16 @@ const STRINGS = {
     settingsAccounts: 'Cuentas',
     settingsDanger: 'Zona peligrosa',
     exportCsv: 'Exportar CSV',
+    exportXlsx: 'Exportar Excel (.xlsx)',
     exportProfile: 'Exportar perfil',
     importProfile: 'Importar perfil',
     importCsv: 'Importar CSV',
+    importXlsx: 'Importar Excel (.xlsx)',
+    exportGroup: 'Exportar',
+    importGroup: 'Importar',
+    xlsxOk: 'Excel exportado ✓',
+    importXlsxOk: 'Excel importado ✓',
+    importXlsxError: 'No se pudo leer el archivo Excel ✕',
     importCsvTitle: '¿Importar CSV?',
     importCsvDesc: (n) => `Se encontraron ${n} movimiento${n!==1?'s':''} válido${n!==1?'s':''} en el CSV. Se agregarán a tus datos actuales.`,
     importCsvOk: 'CSV importado ✓',
@@ -891,6 +997,12 @@ const STRINGS = {
     fixedEmpty: 'No hay gastos fijos aún.\nTocá "Agregar" para configurar costos mensuales recurrentes como alquiler, suscripciones o servicios.',
     fixedBannerLabel: 'Fijos este mes',
     fixedBadge: 'FIJO',
+    fixedPayBtn: 'Pagar',
+    fixedPaidBtn: '✓ Pagado',
+    fixedPaidToast: 'Pago registrado ✓',
+    fixedUnpaidToast: 'Marcado como no pagado',
+    fixedProgressPaid: (n,t) => `${n} de ${t} pagados`,
+    fixedProgressAmt: (a,t) => `$${a} / $${t}`,
     chartBars:  'Por período',
     chartDonut: 'Por categoría',
     chartLine:  'Evolución',
@@ -964,6 +1076,9 @@ function applyLang() {
   document.getElementById('lbl-description').textContent      = t('description');
   document.getElementById('lbl-note').innerHTML               = `${t('note')} &nbsp;<small style="color:var(--muted)">${t('noteOptional')}</small>`;
   document.getElementById('lbl-category').textContent         = t('category');
+  document.getElementById('lbl-date-field').textContent       = t('dateLabel');
+  document.getElementById('date-btn-today').textContent       = t('dateToday');
+  document.getElementById('date-btn-custom').textContent      = t('dateCustom');
   document.getElementById('lbl-history').textContent          = t('history');
   document.getElementById('lbl-expenses').textContent         = t('expenses');
   document.getElementById('lbl-income-stat').textContent      = t('incomeStat');
@@ -999,9 +1114,13 @@ function applyLang() {
   document.getElementById('lbl-settings-accounts').textContent= t('settingsAccounts');
   document.getElementById('lbl-settings-danger').textContent  = t('settingsDanger');
   document.getElementById('lbl-export-csv').textContent       = t('exportCsv');
+  document.getElementById('lbl-export-xlsx').textContent      = t('exportXlsx');
   document.getElementById('lbl-export-profile').textContent   = t('exportProfile');
   document.getElementById('lbl-import-profile').textContent   = t('importProfile');
   document.getElementById('lbl-import-csv').textContent       = t('importCsv');
+  document.getElementById('lbl-import-xlsx').textContent      = t('importXlsx');
+  document.getElementById('lbl-export-group').textContent     = t('exportGroup');
+  document.getElementById('lbl-import-group').textContent     = t('importGroup');
   document.getElementById('lbl-manage-accounts').textContent  = t('manageAccounts');
   document.getElementById('lbl-clear-all').textContent        = t('clearAll');
   document.getElementById('lbl-clearall-title').textContent   = t('clearAllTitle');
@@ -1156,10 +1275,33 @@ function switchTab(name) {
   document.getElementById('tab-'+name).classList.add('active');
   const navEl = document.getElementById('nav-'+name);
   if (navEl) navEl.classList.add('active');
+  document.querySelector('.fab').style.display = name === 'add' ? 'none' : '';
   if (name==='home') renderHome();
   if (name==='history') renderHistory();
   if (name==='fixed') renderFixed();
   if (name==='settings') { applyLang(); }
+}
+
+// ── Date field ──
+let entryDateMode = 'today'; // 'today' | 'custom'
+
+function setDateMode(mode) {
+  entryDateMode = mode;
+  document.getElementById('date-btn-today').classList.toggle('active', mode === 'today');
+  document.getElementById('date-btn-custom').classList.toggle('active', mode === 'custom');
+  const picker = document.getElementById('date-custom-input');
+  picker.style.display = mode === 'custom' ? '' : 'none';
+  if (mode === 'custom' && !picker.value) {
+    picker.value = new Date().toISOString().slice(0, 10);
+  }
+}
+
+function getEntryDate() {
+  if (entryDateMode === 'custom') {
+    const v = document.getElementById('date-custom-input').value;
+    if (v) return new Date(v + 'T12:00:00').toISOString();
+  }
+  return new Date().toISOString();
 }
 
 // ── Open Add ──
@@ -1171,6 +1313,8 @@ function openAdd() {
   document.getElementById('amount-input').value    = '';
   document.getElementById('desc-input').value      = '';
   document.getElementById('note-input').value      = '';
+  document.getElementById('date-custom-input').value = '';
+  setDateMode('today');
   setType('expense');
   selectCat('food');
   switchTab('add');
@@ -1188,6 +1332,15 @@ function openEdit(id) {
   document.getElementById('amount-input').value    = e.amount;
   document.getElementById('desc-input').value      = e.desc;
   document.getElementById('note-input').value      = e.note || '';
+  // Pre-fill date
+  const entryDate = e.date ? new Date(e.date).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
+  const todayStr  = new Date().toISOString().slice(0, 10);
+  if (entryDate === todayStr) {
+    setDateMode('today');
+  } else {
+    document.getElementById('date-custom-input').value = entryDate;
+    setDateMode('custom');
+  }
   setType(e.type);
   selectCat(e.cat);
   switchTab('add');
@@ -1200,20 +1353,20 @@ function submitEntry() {
   const desc = document.getElementById('desc-input').value.trim() || 'Untitled';
   const note = document.getElementById('note-input').value.trim();
   if (!amt || amt<=0) { alert(lang==='es'?'Ingresá un monto válido':'Please enter a valid amount'); return; }
-  const cat = CATS().find(c=>c.id===selectedCat);
+  const cat  = CATS().find(c=>c.id===selectedCat);
+  const date = getEntryDate();
 
   if (editingId !== null) {
     const idx = entries.findIndex(x=>x.id===editingId);
     if (idx !== -1) {
       entries[idx] = { ...entries[idx], type:currentType, amount:amt, desc, note,
-        cat:cat.id, emoji:cat.emoji, color:cat.color, label:cat.label };
+        cat:cat.id, emoji:cat.emoji, color:cat.color, label:cat.label, date };
     }
     saveEntries(entries);
     showToast(t('savedOk'), 'var(--blue)', '#fff');
   } else {
     entries.unshift({ id:Date.now(), type:currentType, amount:amt, desc, note,
-      cat:cat.id, emoji:cat.emoji, color:cat.color, label:cat.label,
-      date:new Date().toISOString() });
+      cat:cat.id, emoji:cat.emoji, color:cat.color, label:cat.label, date });
     saveEntries(entries);
     showToast(t('addedOk'), 'var(--green)', '#111');
   }
@@ -1269,9 +1422,14 @@ function closeClearAll(e) {
 function confirmClearAll() {
   if (document.getElementById('clearall-confirm-input').value !== t('clearAllWord')) return;
   saveEntries([]);
+  saveFixed([]);
+  // also clear paid-this-month state for active account
+  Object.keys(localStorage)
+    .filter(k => k.startsWith(`money_fixed_paid_${activeAccountId}_`) || k.startsWith(`money_fixed_link_${activeAccountId}_`))
+    .forEach(k => localStorage.removeItem(k));
   document.getElementById('clearall-confirm-input').value = '';
   document.getElementById('clearall-overlay').classList.remove('show');
-  renderHome(); renderHistory();
+  renderHome(); renderHistory(); renderFixed();
   showToast(t('deletedOk'), 'var(--red)', '#fff');
 }
 
@@ -1299,21 +1457,245 @@ function clearSearch() {
   renderHistory();
 }
 
-// ── Export CSV ──
+// ── Collapsible data groups ──
+function toggleDataGroup(name) {
+  const body  = document.getElementById('group-'+name);
+  const caret = document.getElementById('caret-'+name);
+  // close the other one first
+  ['export','import'].forEach(n => {
+    if (n !== name) {
+      document.getElementById('group-'+n).classList.remove('open');
+      document.getElementById('caret-'+n).classList.remove('open');
+    }
+  });
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  caret.classList.toggle('open', !isOpen);
+  // fix border on import header
+  const importHdr = document.getElementById('import-group-header');
+  if (importHdr) importHdr.style.borderBottom = (!isOpen && name==='import') ? 'none' : '';
+}
+
+// ── Export XLSX ──
+function exportXLSX() {
+  const doExport = function() {
+    const entries    = getEntries();
+    const fixed      = getFixed();
+    const headers    = CSV_HEADERS[lang] || CSV_HEADERS.en;
+    const typeLabels = CSV_TYPE_LABELS[lang] || CSV_TYPE_LABELS.en;
+    const locale     = lang === 'es' ? 'es-AR' : 'en-US';
+
+    // Sheet 1: Transactions
+    const rows = [headers];
+    entries.forEach(e => {
+      const cat = CATS().find(c => c.id === e.cat);
+      rows.push([
+        new Date(e.date).toLocaleDateString(locale),
+        typeLabels[e.type] || e.type,
+        cat ? cat.label : (e.label || e.cat),
+        e.desc || '',
+        e.note || '',
+        e.type==='expense' ? -e.amount : e.amount
+      ]);
+    });
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [12,10,12,28,28,12].map(w=>({wch:w}));
+    XLSX.utils.book_append_sheet(wb, ws, lang==='es' ? 'Movimientos' : 'Transactions');
+
+    // Sheet 2: Fixed expenses
+    const fixedHeaders = lang==='es'
+      ? ['Descripción','Categoría','Monto/mes']
+      : ['Description','Category','Amount/month'];
+    const fixedRows = [fixedHeaders];
+    fixed.forEach(f => {
+      const cat = CATS().find(c => c.id === f.cat);
+      fixedRows.push([
+        f.desc || '',
+        cat ? cat.label : f.cat,
+        f.amount
+      ]);
+    });
+    // totals row
+    fixedRows.push(['', lang==='es'?'TOTAL':'TOTAL', fixed.reduce((s,f)=>s+f.amount,0)]);
+    const ws2 = XLSX.utils.aoa_to_sheet(fixedRows);
+    ws2['!cols'] = [28,14,14].map(w=>({wch:w}));
+    XLSX.utils.book_append_sheet(wb, ws2, lang==='es' ? 'Gastos Fijos' : 'Fixed Expenses');
+
+    XLSX.writeFile(wb, `money-tracker-${new Date().toISOString().slice(0,10)}.xlsx`);
+    showToast(t('xlsxOk'), 'var(--green)', '#111');
+  };
+  if (window.XLSX) { doExport(); return; }
+  const script = document.createElement('script');
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  script.onload = doExport;
+  script.onerror = () => showToast('Error loading library ✕', 'var(--red)', '#fff');
+  document.head.appendChild(script);
+}
+
+// ── Import XLSX ──
+function triggerImportXLSX() {
+  document.getElementById('import-xlsx-input').value = '';
+  document.getElementById('import-xlsx-input').click();
+}
+
+function handleImportXLSX(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const loadAndParse = () => {
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        const data = new Uint8Array(ev.target.result);
+        const wb   = XLSX.read(data, {type:'array', cellDates:true});
+
+        // ── Sheet 1: Transactions ──
+        const ws   = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+        if (rows.length < 2) { showToast(t('importCsvEmpty'), 'var(--red)', '#fff'); return; }
+
+        const normalizeH = h => String(h||'').toLowerCase().trim()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+        const header = rows[0].map(normalizeH);
+        const idx = {
+          date:   header.findIndex(h => ['date','fecha'].includes(h)),
+          type:   header.findIndex(h => ['type','tipo'].includes(h)),
+          cat:    header.findIndex(h => ['category','categoria'].includes(h)),
+          desc:   header.findIndex(h => ['description','descripcion'].includes(h)),
+          note:   header.findIndex(h => ['note','nota'].includes(h)),
+          amount: header.findIndex(h => ['amount','monto','importe'].includes(h)),
+        };
+
+        const entries = [];
+        for (let i = 1; i < rows.length; i++) {
+          const cols = rows[i];
+          const rawAmt = idx.amount >= 0 ? String(cols[idx.amount]||'').replace(/[^0-9.\-]/g,'') : null;
+          const amount = rawAmt ? Math.abs(parseFloat(rawAmt)) : null;
+          if (!amount || isNaN(amount) || amount <= 0) continue;
+
+          let type = 'expense';
+          if (idx.type >= 0) {
+            const tv = String(cols[idx.type]||'').toLowerCase().trim();
+            if (['income','ingreso','ingresos','+'].includes(tv)) type = 'income';
+          } else if (rawAmt && parseFloat(rawAmt) > 0) { type = 'income'; }
+
+          const rawCat = idx.cat >= 0 ? String(cols[idx.cat]||'').toLowerCase().trim()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g,'') : '';
+          const catId  = CAT_ALIASES[rawCat] || 'other';
+          const catDef = CAT_DEFS.find(c => c.id === catId);
+
+          let date = new Date().toISOString();
+          if (idx.date >= 0 && cols[idx.date]) {
+            const d = cols[idx.date] instanceof Date ? cols[idx.date] : new Date(cols[idx.date]);
+            if (!isNaN(d)) date = d.toISOString();
+          }
+
+          const desc = idx.desc >= 0 ? String(cols[idx.desc]||'').trim() || 'Imported' : 'Imported';
+          const note = idx.note >= 0 ? String(cols[idx.note]||'').trim() : '';
+          entries.push({ id: Date.now()+i, type, amount, desc, note,
+            cat:catDef.id, emoji:catDef.emoji, color:catDef.color, label:catDef.id, date });
+        }
+        if (!entries.length) { showToast(t('importCsvEmpty'), 'var(--red)', '#fff'); return; }
+
+        // ── Sheet 2: Fixed expenses (optional) ──
+        const fixedSheet = wb.SheetNames.find(n => {
+          const nl = n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+          return ['gastos fijos','fixed expenses','fijos','fixed'].includes(nl);
+        });
+        const fixedImported = [];
+        if (fixedSheet) {
+          const wf   = wb.Sheets[fixedSheet];
+          const frows = XLSX.utils.sheet_to_json(wf, {header:1, defval:''});
+          if (frows.length >= 2) {
+            const fh = frows[0].map(normalizeH);
+            const fi = {
+              desc:   fh.findIndex(h => ['description','descripcion'].includes(h)),
+              cat:    fh.findIndex(h => ['category','categoria'].includes(h)),
+              amount: fh.findIndex(h => ['amount/month','monto/mes','amount','monto'].includes(h)),
+            };
+            for (let i = 1; i < frows.length; i++) {
+              const r = frows[i];
+              const rawAmt = fi.amount >= 0 ? String(r[fi.amount]||'').replace(/[^0-9.]/g,'') : null;
+              const amount = rawAmt ? parseFloat(rawAmt) : null;
+              if (!amount || isNaN(amount) || amount <= 0) continue;
+              const desc = fi.desc >= 0 ? String(r[fi.desc]||'').trim() : 'Imported';
+              if (!desc || desc.toUpperCase() === 'TOTAL') continue;
+              const rawCat = fi.cat >= 0 ? String(r[fi.cat]||'').toLowerCase().trim()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g,'') : '';
+              const catId  = CAT_ALIASES[rawCat] || 'bills';
+              const catDef = CAT_DEFS.find(c => c.id === catId);
+              fixedImported.push({ id: Date.now()+i+10000, desc, amount,
+                cat:catDef.id, emoji:catDef.emoji, color:catDef.color });
+            }
+          }
+        }
+
+        pendingImportCSVData = { entries, fixed: fixedImported };
+        const fixedNote = fixedImported.length
+          ? (lang==='es' ? ` + ${fixedImported.length} gasto(s) fijo(s)` : ` + ${fixedImported.length} fixed expense(s)`)
+          : '';
+        document.getElementById('import-csv-desc').textContent =
+          t('importCsvDesc')(entries.length) + fixedNote;
+        document.getElementById('import-csv-overlay').classList.add('show');
+      } catch(err) { showToast(t('importXlsxError'), 'var(--red)', '#fff'); }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+  if (window.XLSX) { loadAndParse(); return; }
+  const script = document.createElement('script');
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  script.onload = loadAndParse;
+  script.onerror = () => showToast('Error loading library ✕', 'var(--red)', '#fff');
+  document.head.appendChild(script);
+}
+
+
+const CSV_HEADERS = {
+  en: ['Date','Type','Category','Description','Note','Amount'],
+  es: ['Fecha','Tipo','Categoría','Descripción','Nota','Monto'],
+};
+const CSV_TYPE_LABELS = {
+  en: { expense: 'expense', income: 'income' },
+  es: { expense: 'gasto',   income: 'ingreso' },
+};
+
 function exportCSV() {
-  const entries = getEntries();
-  const rows = [['Date','Type','Category','Description','Note','Amount']];
+  const entries    = getEntries();
+  const fixed      = getFixed();
+  const headers    = CSV_HEADERS[lang] || CSV_HEADERS.en;
+  const typeLabels = CSV_TYPE_LABELS[lang] || CSV_TYPE_LABELS.en;
+  const locale     = lang === 'es' ? 'es-AR' : 'en-US';
+  const rows = [headers];
   entries.forEach(e => {
+    const cat = CATS().find(c => c.id === e.cat);
     rows.push([
-      new Date(e.date).toLocaleDateString(),
-      e.type, e.label,
+      new Date(e.date).toLocaleDateString(locale),
+      typeLabels[e.type] || e.type,
+      cat ? cat.label : (e.label || e.cat),
       `"${(e.desc||'').replace(/"/g,'""')}"`,
       `"${(e.note||'').replace(/"/g,'""')}"`,
       e.type==='expense' ? -e.amount : e.amount
     ]);
   });
+  // Fixed expenses block
+  if (fixed.length) {
+    rows.push([]);
+    const fixedLabel = lang==='es' ? '## Gastos Fijos' : '## Fixed Expenses';
+    rows.push([fixedLabel,'','','','','']);
+    const fixedHeaders = lang==='es'
+      ? ['Descripción','Categoría','Monto/mes','','','']
+      : ['Description','Category','Amount/month','','',''];
+    rows.push(fixedHeaders);
+    fixed.forEach(f => {
+      const cat = CATS().find(c => c.id === f.cat);
+      rows.push([
+        `"${(f.desc||'').replace(/"/g,'""')}"`,
+        cat ? cat.label : f.cat,
+        f.amount, '', '', ''
+      ]);
+    });
+  }
   const csv  = rows.map(r=>r.join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
+  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href=url; a.download=`money-tracker-${new Date().toISOString().slice(0,10)}.csv`;
@@ -1324,7 +1706,8 @@ function exportCSV() {
 // ── Export Profile ──
 function exportProfile() {
   const entries = getEntries();
-  const profile = { version:2, exportedAt:new Date().toISOString(), entries, accounts, activeAccountId };
+  const fixed   = getFixed();
+  const profile = { version:3, exportedAt:new Date().toISOString(), entries, fixed, accounts, activeAccountId };
   const blob = new Blob([JSON.stringify(profile,null,2)], {type:'application/json'});
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
@@ -1382,13 +1765,16 @@ function handleImportCSV(event) {
       const lines = ev.target.result.split(/\r?\n/).filter(l => l.trim());
       if (lines.length < 2) { showToast(t('importCsvEmpty'), 'var(--red)', '#fff'); return; }
 
-      const header = parseCsvLine(lines[0]).map(h => h.replace(/"/g,'').toLowerCase().trim());
-      // Expected: Date, Type, Category, Description, Note, Amount
+      // Normalize header: lowercase + strip accents so "Categoría" matches "categoria"
+      const normalizeH = h => h.replace(/"/g,'').toLowerCase().trim()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      const header = parseCsvLine(lines[0]).map(normalizeH);
+      // Accept column names in English or Spanish (accents stripped)
       const idx = {
         date:   header.findIndex(h => ['date','fecha'].includes(h)),
         type:   header.findIndex(h => ['type','tipo'].includes(h)),
-        cat:    header.findIndex(h => ['category','categoria','categoría'].includes(h)),
-        desc:   header.findIndex(h => ['description','descripcion','descripción'].includes(h)),
+        cat:    header.findIndex(h => ['category','categoria'].includes(h)),
+        desc:   header.findIndex(h => ['description','descripcion'].includes(h)),
         note:   header.findIndex(h => ['note','nota'].includes(h)),
         amount: header.findIndex(h => ['amount','monto','importe'].includes(h)),
       };
@@ -1407,11 +1793,13 @@ function handleImportCSV(event) {
         if (idx.type >= 0) {
           const tv = (cols[idx.type]||'').toLowerCase().trim();
           if (['income','ingreso','ingresos','+'].includes(tv)) type = 'income';
+          // expense values: 'expense','gasto','gastos','-' stay as expense (default)
         } else if (rawAmt && parseFloat(rawAmt) > 0) {
           type = 'income';
         }
 
-        const rawCat  = idx.cat  >= 0 ? (cols[idx.cat]||'').toLowerCase().trim()  : '';
+        const rawCat  = idx.cat  >= 0 ? (cols[idx.cat]||'').toLowerCase().trim()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g,'') : '';
         const catId   = CAT_ALIASES[rawCat] || 'other';
         const catDef  = CAT_DEFS.find(c => c.id === catId);
 
@@ -1452,14 +1840,27 @@ function closeImportCSVConfirm(e) {
 
 function confirmImportCSV() {
   if (!pendingImportCSVData) return;
+  // support both old format (plain array) and new format ({entries, fixed})
+  const importedEntries = Array.isArray(pendingImportCSVData)
+    ? pendingImportCSVData
+    : pendingImportCSVData.entries;
+  const importedFixed = (!Array.isArray(pendingImportCSVData) && pendingImportCSVData.fixed)
+    ? pendingImportCSVData.fixed
+    : [];
+
   const existing = getEntries();
-  // Merge: add new entries, sort by date desc
-  const merged = [...pendingImportCSVData, ...existing]
+  const merged = [...importedEntries, ...existing]
     .sort((a,b) => new Date(b.date) - new Date(a.date));
   saveEntries(merged);
+
+  if (importedFixed.length) {
+    const existingFixed = getFixed();
+    saveFixed([...existingFixed, ...importedFixed]);
+  }
+
   pendingImportCSVData = null;
   document.getElementById('import-csv-overlay').classList.remove('show');
-  renderHome(); renderHistory();
+  renderHome(); renderHistory(); renderFixed();
   showToast(t('importCsvOk'), 'var(--orange)', '#fff');
 }
 function handleImportFile(event) {
@@ -1469,7 +1870,7 @@ function handleImportFile(event) {
     try {
       const data = JSON.parse(ev.target.result);
       if (!data.entries || !Array.isArray(data.entries)) throw new Error('bad');
-      pendingImportData = data.entries;
+      pendingImportData = data;   // store whole object, not just entries
       const n = data.entries.length;
       const locale = lang==='es'?'es-AR':'en-US';
       const d = data.exportedAt ? new Date(data.exportedAt).toLocaleDateString(locale) : null;
@@ -1486,10 +1887,12 @@ function closeImportConfirm(e) {
 }
 function confirmImport() {
   if (!pendingImportData) return;
-  saveEntries(pendingImportData);
+  const data = pendingImportData;
+  saveEntries(Array.isArray(data) ? data : data.entries);   // back-compat with old exports
+  if (data.fixed && Array.isArray(data.fixed)) saveFixed(data.fixed);
   pendingImportData = null;
   document.getElementById('import-overlay').classList.remove('show');
-  renderHome(); renderHistory();
+  renderHome(); renderHistory(); renderFixed();
   showToast(t('profileImportOk'), 'var(--orange)', '#fff');
 }
 
@@ -1589,32 +1992,127 @@ function saveFixedExpense() {
 function deleteFixed(id) {
   let fixed = getFixed().filter(x=>x.id!==id);
   saveFixed(fixed);
+  // also remove any paid-this-month record
+  const key = fixedPaidKey();
+  const paid = JSON.parse(localStorage.getItem(key)||'[]').filter(x=>x!==id);
+  localStorage.setItem(key, JSON.stringify(paid));
   renderFixed();
   renderHome();
   showToast(t('fixedDeletedOk'), 'var(--red)', '#fff');
 }
+
+// ── Fixed payment tracking ──
+// Paid state is stored per-account per month: "money_fixed_paid_<accId>_<YYYY-MM>"
+function fixedPaidKey() {
+  const now = new Date();
+  return `money_fixed_paid_${activeAccountId}_${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+}
+function getPaidIds() {
+  return JSON.parse(localStorage.getItem(fixedPaidKey())||'[]');
+}
+function savePaidIds(arr) {
+  localStorage.setItem(fixedPaidKey(), JSON.stringify(arr));
+}
+
+function toggleFixedPaid(fixedId) {
+  const fixed = getFixed().find(f=>f.id===fixedId);
+  if (!fixed) return;
+  let paid = getPaidIds();
+  const wasPaid = paid.includes(fixedId);
+
+  if (wasPaid) {
+    // Unmark: remove from paid list AND remove the linked transaction
+    paid = paid.filter(x=>x!==fixedId);
+    savePaidIds(paid);
+    // Remove the linked entry if it exists
+    const linkKey = `money_fixed_link_${activeAccountId}_${fixedPaidKey().slice(-7)}_${fixedId}`;
+    const linkedEntryId = parseInt(localStorage.getItem(linkKey)||'0');
+    if (linkedEntryId) {
+      let entries = getEntries().filter(e=>e.id!==linkedEntryId);
+      saveEntries(entries);
+      localStorage.removeItem(linkKey);
+    }
+    showToast(t('fixedUnpaidToast'), 'var(--muted)', '#fff');
+  } else {
+    // Mark as paid: add transaction
+    paid.push(fixedId);
+    savePaidIds(paid);
+    const cat = CATS().find(c=>c.id===fixed.cat);
+    const newEntry = {
+      id: Date.now(),
+      type: 'expense',
+      amount: fixed.amount,
+      desc: fixed.desc,
+      note: lang==='es' ? 'Gasto fijo' : 'Fixed expense',
+      cat: cat.id, emoji: cat.emoji, color: cat.color, label: cat.label,
+      date: new Date().toISOString(),
+      isFixed: true,
+    };
+    let entries = getEntries();
+    entries.unshift(newEntry);
+    saveEntries(entries);
+    // Store link so we can undo
+    const linkKey = `money_fixed_link_${activeAccountId}_${fixedPaidKey().slice(-7)}_${fixedId}`;
+    localStorage.setItem(linkKey, String(newEntry.id));
+    showToast(t('fixedPaidToast'), 'var(--green)', '#111');
+  }
+  renderFixed();
+  renderHome();
+  renderHistory();
+}
+
 function renderFixed() {
   const fixed = getFixed();
+  const paid  = getPaidIds();
+  const paidCount = fixed.filter(f=>paid.includes(f.id)).length;
   const total = fixed.reduce((s,f)=>s+f.amount,0);
+  const paidTotal = fixed.filter(f=>paid.includes(f.id)).reduce((s,f)=>s+f.amount,0);
+
   document.getElementById('fixed-monthly-total').textContent = '$'+total.toFixed(2);
   document.getElementById('fixed-count-val').textContent = fixed.length;
+
+  // Progress bar
+  const wrap = document.getElementById('fixed-progress-wrap');
+  if (fixed.length > 0) {
+    wrap.style.display = '';
+    const pct = total > 0 ? (paidTotal/total*100) : 0;
+    document.getElementById('fixed-progress-fill').style.width = pct+'%';
+    document.getElementById('fixed-progress-paid-lbl').textContent =
+      t('fixedProgressPaid')(paidCount, fixed.length);
+    document.getElementById('fixed-progress-total-lbl').textContent =
+      t('fixedProgressAmt')(paidTotal.toFixed(0), total.toFixed(0));
+  } else {
+    wrap.style.display = 'none';
+  }
+
   const list = document.getElementById('fixed-list');
   if (!fixed.length) {
     list.innerHTML = `<div class="fixed-empty">${t('fixedEmpty').replace('\n','<br>')}</div>`;
     return;
   }
-  list.innerHTML = fixed.map(f=>`
-    <div class="fixed-item">
-      <div class="fixed-item-icon" style="background:${f.color}22">${icon(f.emoji||f.cat, f.color||'var(--muted)')}</div>
+
+  list.innerHTML = fixed.map(f=>{
+    const isPaid = paid.includes(f.id);
+    const statusHtml = isPaid
+      ? `<div class="fixed-item-status paid-lbl">✓ ${t('fixedPaidBtn').replace('✓ ','')}</div>`
+      : `<div class="fixed-item-status unpaid">⏳ ${lang==='es'?'Pendiente':'Pending'}</div>`;
+    const payBtnClass = isPaid ? 'paid' : 'unpaid';
+    const payBtnLabel = isPaid ? t('fixedPaidBtn') : t('fixedPayBtn');
+    return `
+    <div class="fixed-item${isPaid?' paid':''}">
+      <div class="fixed-item-icon" style="background:${f.color}22">${icon(f.emoji||f.cat, isPaid?'var(--muted)':f.color||'var(--muted)')}</div>
       <div class="fixed-item-info">
         <div class="fixed-item-name">${escHtml(f.desc)}</div>
         <div class="fixed-item-meta">${CATS().find(c=>c.id===f.cat)?.label||f.cat}</div>
+        ${statusHtml}
       </div>
       <div class="fixed-item-amount">-$${f.amount.toFixed(2)}</div>
       <div class="fixed-item-actions">
+        <button class="fixed-pay-btn ${payBtnClass}" onclick="toggleFixedPaid(${f.id})">${payBtnLabel}</button>
         <button class="txn-delete" onclick="deleteFixed(${f.id})">${icon('trash')}</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // ── Chart cat filter ──
